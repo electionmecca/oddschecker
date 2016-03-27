@@ -19,6 +19,17 @@ def dropper(table):
     if table!='':
         try: scraperwiki.sqlite.execute('drop table "'+table+'"')
         except: pass
+    
+def makeSoup(url):
+	try:
+		r = requests.get(url)
+		#print '>>>',r.history
+		#ret= BeautifulSoup(r.text)
+		ret=html.fromstring(r.text)
+		for s in r.history:
+			if s.status_code==302: ret==""
+	except: ret=""
+	return ret
 
 #General election overall
 
