@@ -19,6 +19,26 @@ def dropper(table):
     if table!='':
         try: scraperwiki.sqlite.execute('drop table "'+table+'"')
         except: pass
+        
+def oddsGrabber(tree,default):
+    allbets=default
+    allbets['time']=datetime.datetime.utcnow()
+    bets={}
+    allbets['odds']=bets
+  
+    if tree=="" or tree is None: return allbets
+
+    for row in tree.xpath('//tbody[@id="t1"]/tr'):
+        name=row[1].text
+        bets[name]={}
+        for cell in row[3:]:
+            if cell.text is not None:
+                try:
+                    bets[name][ cell.get('id').split('_')[1] ]=cell.text
+                except: pass
+    allbets['odds']=bets
+    #print(allbets)
+    return allbets
     
 def makeSoup(url):
 	try:
